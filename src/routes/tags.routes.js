@@ -5,7 +5,7 @@ const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
 
 const tagsRoutes = Router();
 
-const tagsController = new TagsController()
+const tagsController = new TagsController();
     
 // *Rota da aplicação
 tagsRoutes.get('/', ensureAuthenticated, tagsController.index);
