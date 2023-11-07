@@ -1,7 +1,6 @@
 const { hash, compare } = require('bcryptjs');
 const AppError = require('../utils/AppError');
 const sqliteConnection = require('../database/sqlite');
-const { application } = require('express');
 
 class UsersController {
     
@@ -13,7 +12,7 @@ class UsersController {
         const checkUserExists = await database.get('SELECT * FROM users WHERE email = (?)', [email])
         
         if (checkUserExists) {
-            throw new AppError('This email has already been used');
+            throw new AppError('Esse email já está sendo utilizado');
         }
 
         const hashedPassword = await hash(password, 8);
@@ -35,13 +34,13 @@ class UsersController {
 
         // *Name and email
         if (!user) {
-            throw new AppError('User not found');
+            throw new AppError('Usuário não encontrado');
         }
 
         const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email]);
 
         if (userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) {
-            throw new AppError('This email has already been used');
+            throw new AppError('Esse email já está em uso');
         }
 
         // *Password
@@ -49,7 +48,7 @@ class UsersController {
             const checkOldPassword = await compare(old_password, user.password);
 
             if (!checkOldPassword) {
-                throw new AppError('The old password does not match')
+                throw new AppError('A senha antiga não confere')
             }
 
             user.password = await hash(password, 8);
@@ -59,7 +58,7 @@ class UsersController {
         user.email = email ?? user.email;
 
         if (password && !old_password) {
-            throw new AppError('You need to inform your old password to define a new password')
+            throw new AppError('Você precisa informar a senha antiga para definir uma nova')
         }
 
         // *Send the changes to database
