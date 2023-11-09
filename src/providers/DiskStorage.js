@@ -10,11 +10,11 @@ class DiskStorage {
         );
 
         return file;
-    }   
+    }
 
     async deleteFile(file) {
         const filePath = path.resolve(uplodadConfig.UPLOADS_FOLDER, file);
-        
+
         try {
             fs.promises.stat(filePath);
         } catch (error) {
